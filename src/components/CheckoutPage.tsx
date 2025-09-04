@@ -52,8 +52,31 @@ const CheckoutPage: React.FC = () => {
     return !Object.values(errors).some((error) => error);
   };
 
-  const handlePlaceOrder = () => {
+  const sendPaymentToWebhook = async () => {
+    const products = cartItems.map((item) => ({
+      name: item.name,
+      price: item.price_cents,
+      quantity: item.quantity,
+    }));
+    try {
+      await fetch(
+        "https://n8n-q5zelgpswvgl.pempek.sumopod.my.id/webhook-test/payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ products, totalPrice: getTotalPrice() }),
+        }
+      );
+    } catch (err) {
+      console.error("Failed to send payment webhook", err);
+    }
+  };
+
+  const handlePlaceOrder = async () => {
     if (validateForm()) {
+      await sendPaymentToWebhook();
       setIsOrdered(true);
       setTimeout(() => {
         clearCart();
@@ -128,7 +151,7 @@ const CheckoutPage: React.FC = () => {
           >
             <div className="w-20 h-20 flex-shrink-0">
               <img
-                src={item.image}
+                src={item.image_url}
                 alt={item.name}
                 className="w-full h-full object-cover rounded-lg"
               />
@@ -143,7 +166,7 @@ const CheckoutPage: React.FC = () => {
 
             <div className="text-right">
               <p className="text-lg font-semibold text-gray-900 mb-2">
-                {formatPrice(item.price * item.quantity)}
+                {formatPrice(item.price_cents * item.quantity)}
               </p>
               <button
                 onClick={() => removeFromCart(item.id)}

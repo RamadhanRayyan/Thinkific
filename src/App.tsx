@@ -1,10 +1,9 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
-import Navigation from './components/Navigation';
-import HomePage from './components/HomePage';
-import ProductDetail from './components/ProductDetail';
-import CheckoutPage from './components/CheckoutPage';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { CartProvider } from "./context/CartContext";
+import Navigation from "./components/Navigation";
+import HomePage from "./components/HomePage";
+import ProductDetail from "./components/ProductDetail";
+import CheckoutPage from "./components/CheckoutPage";
 
 function App() {
   return (
@@ -14,7 +13,7 @@ function App() {
           <Navigation />
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/product/:slug" element={<ProductDetail />} />
             <Route path="/checkout" element={<CheckoutPage />} />
           </Routes>
         </div>
